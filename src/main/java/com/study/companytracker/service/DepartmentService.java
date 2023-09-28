@@ -2,6 +2,8 @@ package com.study.companytracker.service;
 
 
 import com.study.companytracker.dto.GenericRestResponse;
+import com.study.companytracker.exception.NotFoundException;
+import com.study.companytracker.model.Department;
 import com.study.companytracker.repository.data.DepartmentData;
 import com.study.companytracker.util.enums.ErrorMessage;
 import com.study.companytracker.util.enums.ResponseMessage;
@@ -33,12 +35,13 @@ public class DepartmentService {
 
     public GenericRestResponse<?> getDepartmentByName(String name) {
         try {
+            Department department = this.departmentData.findDepartmentByName(name).orElseThrow(() -> new NotFoundException("No department found with name : "+name));
             return GenericRestResponse.builder()
-                    .data(this.departmentData.findDepartmentByName(name))
+                    .data(department)
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        } catch (Exception exception) {
+        } catch (NotFoundException notFoundException) {
             return GenericRestResponse.builder()
                     .data(null)
                     .responseMessage(ResponseMessage.FAIL)
