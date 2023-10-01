@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface DepartmentData extends JpaRepository<Department,Long>, DepartmentRepo {
 
     Optional<Department> findDepartmentByName(String name);
+
+    Optional<Department> findDepartmentById(Long id);
+
 }

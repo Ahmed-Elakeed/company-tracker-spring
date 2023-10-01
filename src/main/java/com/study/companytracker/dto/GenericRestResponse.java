@@ -16,6 +16,5 @@ public class GenericRestResponse<T> {
     private T data;
     private ResponseMessage responseMessage;
     private Long responseCode;
-
     private String errorMessage;
 }

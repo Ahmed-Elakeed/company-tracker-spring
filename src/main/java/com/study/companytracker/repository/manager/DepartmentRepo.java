@@ -7,4 +7,7 @@ import java.util.List;
 public interface DepartmentRepo {
 
     List<Department> fetchAllDepartments();
+
+    Department fetchDepartmentById(Long id);
+
 }

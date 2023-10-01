@@ -50,4 +50,51 @@ public class DepartmentService {
                     .build();
         }
     }
+    public GenericRestResponse<?> getDepartmentById(Long id){
+        try {
+//          Department department = this.departmentData.fetchDepartmentById(id);
+            Department department = this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No department found with id : " +id));
+            return GenericRestResponse.builder()
+                    .data(department)
+                    .responseMessage(ResponseMessage.SUCCESS)
+                    .responseCode(ResponseMessage.SUCCESS.getCode())
+                    .build();
+        }catch (NotFoundException exception){
+            return GenericRestResponse.builder()
+                    .data(null)
+                    .responseMessage(ResponseMessage.FAIL)
+                    .responseCode(ResponseMessage.FAIL.getCode())
+                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
+                    .build();
+        }
+    }
+    public GenericRestResponse<?> addDepartment(Department department){
+        try{
+            return GenericRestResponse.builder()
+                    .data(departmentData.save(department))
+                    .responseMessage(ResponseMessage.SUCCESS)
+                    .responseCode(ResponseMessage.SUCCESS.getCode())
+                    .build();
+        }catch (NotFoundException exception){
+            return GenericRestResponse.builder()
+                    .data(null)
+                    .responseMessage(ResponseMessage.FAIL)
+                    .responseCode(ResponseMessage.FAIL.getCode())
+                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
+                    .build();
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+

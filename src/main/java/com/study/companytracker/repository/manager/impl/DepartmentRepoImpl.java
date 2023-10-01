@@ -16,4 +16,13 @@ public class DepartmentRepoImpl implements DepartmentRepo {
     public List<Department> fetchAllDepartments() {
         return this.entityManager.createQuery("select d from Department d").getResultList();
     }
+
+    @Override
+    public Department fetchDepartmentById(Long id) {
+//        Query query = entityManager.createQuery("select d from Department d where d.id =:id");
+//        query.setParameter("id",id);
+//        Department department = (Department) query.getSingleResult();
+        return (Department) this.entityManager.createQuery("select d from Department d where d.id=:id").setParameter("id", id).getSingleResult();
+    }
+
 }
