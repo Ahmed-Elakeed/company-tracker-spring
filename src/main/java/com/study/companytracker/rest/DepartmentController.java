@@ -39,4 +39,28 @@ public class DepartmentController {
     public ResponseEntity<GenericRestResponse<?>> updateDepartment(@RequestBody Department department) {
         return ResponseEntity.ok(this.departmentService.addDepartment(department));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GenericRestResponse<?>> deleteDepartmentById(@PathVariable Long id){
+        return ResponseEntity.ok(this.departmentService.deleteDepartmentById(id));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

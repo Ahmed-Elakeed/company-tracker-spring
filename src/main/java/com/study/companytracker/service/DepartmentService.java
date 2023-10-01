@@ -85,6 +85,23 @@ public class DepartmentService {
         }
     }
 
+    public GenericRestResponse<?> deleteDepartmentById(Long id){
+        try{
+            Department department = this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No departments found with id : " +id));
+            this.departmentData.deleteById(id);
+            return GenericRestResponse.builder()
+                    .responseMessage(ResponseMessage.SUCCESS)
+                    .responseCode(ResponseMessage.SUCCESS.getCode())
+                    .build();
+        }catch (NotFoundException exception){
+            return GenericRestResponse.builder()
+                    .responseMessage(ResponseMessage.FAIL)
+                    .responseCode(ResponseMessage.FAIL.getCode())
+                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
+                    .build();
+        }
+    }
+
 }
 
 
