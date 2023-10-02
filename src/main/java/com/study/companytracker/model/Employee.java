@@ -16,9 +16,9 @@ public class Employee {
     private Long id;
 
     @Column(name = "full_name", nullable = false)
-    private String FullName;
+    private String fullName;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @ManyToOne

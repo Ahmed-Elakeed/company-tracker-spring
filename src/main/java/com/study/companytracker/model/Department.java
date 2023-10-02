@@ -25,7 +25,7 @@ public class Department {
     @Column(name = "name",nullable = false)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "department",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Employee> employees;
 }
