@@ -1,10 +1,12 @@
 package com.study.companytracker.service;
 
 
+import com.study.companytracker.dto.DepartmentDTO;
 import com.study.companytracker.dto.GenericRestResponse;
 import com.study.companytracker.exception.NotFoundException;
 import com.study.companytracker.model.Department;
 import com.study.companytracker.repository.data.DepartmentData;
+import com.study.companytracker.util.ModelMapperUtil;
 import com.study.companytracker.util.enums.ErrorMessage;
 import com.study.companytracker.util.enums.ResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ public class DepartmentService {
     public GenericRestResponse<?> getAllDepartment() {
         try {
             return GenericRestResponse.builder()
-                    .data(this.departmentData.fetchAllDepartments())
+                    .data(this.departmentData.fetchAllDepartments().stream().map(department -> ModelMapperUtil.MAPPER().map(department, DepartmentDTO.class)))
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
