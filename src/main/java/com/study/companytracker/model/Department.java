@@ -1,12 +1,14 @@
 package com.study.companytracker.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "departments")
@@ -22,4 +24,8 @@ public class Department {
 
     @Column(name = "name",nullable = false)
     private String name;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Employee> employees;
 }
