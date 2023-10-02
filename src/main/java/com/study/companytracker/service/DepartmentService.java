@@ -18,6 +18,11 @@ public class DepartmentService {
 
     private final DepartmentData departmentData;
 
+    /**
+     * @Author Ahmed Elakeed
+     * Service method to get all departments
+     * @return GenericRestResponse with all departments and response details
+     */
     public GenericRestResponse<?> getAllDepartment() {
         try {
             return GenericRestResponse.builder()
@@ -53,9 +58,16 @@ public class DepartmentService {
         }
     }
 
-    public GenericRestResponse<?> getDepartmentById(Long id) {
+
+    /**
+     * @Author Mo'men Magdy
+     * @param departmentId
+     * @return GenericRestResponse with a department object and response details
+     */
+    public GenericRestResponse<?> getDepartmentById(Long departmentId) {
         try {
-            Department department = this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No department found with id : " + id));
+            // finding department by id and throw no found exception if not exist
+            Department department = this.departmentData.findDepartmentById(departmentId).orElseThrow(() -> new NotFoundException("No department found with id : " + departmentId));
             return GenericRestResponse.builder()
                     .data(department)
                     .responseMessage(ResponseMessage.SUCCESS)
