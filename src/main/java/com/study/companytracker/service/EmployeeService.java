@@ -3,6 +3,7 @@ package com.study.companytracker.service;
 import com.study.companytracker.dto.GenericRestResponse;
 import com.study.companytracker.exception.NotFoundException;
 import com.study.companytracker.repository.data.EmployeeData;
+import com.study.companytracker.util.enums.ErrorMessage;
 import com.study.companytracker.util.enums.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class EmployeeService {
                     .data(null)
                     .responseMessage(ResponseMessage.FAIL)
                     .responseCode(ResponseMessage.FAIL.getCode())
+                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
                     .build();
         }
     }
