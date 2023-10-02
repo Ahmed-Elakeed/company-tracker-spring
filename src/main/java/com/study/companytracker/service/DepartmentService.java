@@ -90,7 +90,7 @@ public class DepartmentService {
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        } catch (NotFoundException exception) {
+        } catch (Exception exception) {
             return GenericRestResponse.builder()
                     .data(null)
                     .responseMessage(ResponseMessage.FAIL)
