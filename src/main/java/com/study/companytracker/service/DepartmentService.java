@@ -35,7 +35,7 @@ public class DepartmentService {
 
     public GenericRestResponse<?> getDepartmentByName(String name) {
         try {
-            Department department = this.departmentData.findDepartmentByName(name).orElseThrow(() -> new NotFoundException("No department found with name : "+name));
+            Department department = this.departmentData.findDepartmentByName(name).orElseThrow(() -> new NotFoundException("No department found with name : " + name));
             return GenericRestResponse.builder()
                     .data(department)
                     .responseMessage(ResponseMessage.SUCCESS)
@@ -50,32 +50,16 @@ public class DepartmentService {
                     .build();
         }
     }
-    public GenericRestResponse<?> getDepartmentById(Long id){
+
+    public GenericRestResponse<?> getDepartmentById(Long id) {
         try {
-//          Department department = this.departmentData.fetchDepartmentById(id);
-            Department department = this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No department found with id : " +id));
+            Department department = this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No department found with id : " + id));
             return GenericRestResponse.builder()
                     .data(department)
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        }catch (NotFoundException exception){
-            return GenericRestResponse.builder()
-                    .data(null)
-                    .responseMessage(ResponseMessage.FAIL)
-                    .responseCode(ResponseMessage.FAIL.getCode())
-                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
-                    .build();
-        }
-    }
-    public GenericRestResponse<?> addDepartment(Department department){
-        try{
-            return GenericRestResponse.builder()
-                    .data(departmentData.save(department))
-                    .responseMessage(ResponseMessage.SUCCESS)
-                    .responseCode(ResponseMessage.SUCCESS.getCode())
-                    .build();
-        }catch (NotFoundException exception){
+        } catch (NotFoundException exception) {
             return GenericRestResponse.builder()
                     .data(null)
                     .responseMessage(ResponseMessage.FAIL)
@@ -85,15 +69,32 @@ public class DepartmentService {
         }
     }
 
-    public GenericRestResponse<?> deleteDepartmentById(Long id){
-        try{
-            Department department = this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No departments found with id : " +id));
+    public GenericRestResponse<?> addDepartment(Department department) {
+        try {
+            return GenericRestResponse.builder()
+                    .data(departmentData.save(department))
+                    .responseMessage(ResponseMessage.SUCCESS)
+                    .responseCode(ResponseMessage.SUCCESS.getCode())
+                    .build();
+        } catch (NotFoundException exception) {
+            return GenericRestResponse.builder()
+                    .data(null)
+                    .responseMessage(ResponseMessage.FAIL)
+                    .responseCode(ResponseMessage.FAIL.getCode())
+                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
+                    .build();
+        }
+    }
+
+    public GenericRestResponse<?> deleteDepartmentById(Long id) {
+        try {
+            this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No departments found with id : " + id));
             this.departmentData.deleteById(id);
             return GenericRestResponse.builder()
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        }catch (NotFoundException exception){
+        } catch (NotFoundException exception) {
             return GenericRestResponse.builder()
                     .responseMessage(ResponseMessage.FAIL)
                     .responseCode(ResponseMessage.FAIL.getCode())
