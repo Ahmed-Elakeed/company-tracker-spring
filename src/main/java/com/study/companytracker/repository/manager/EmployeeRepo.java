@@ -1,8 +1,9 @@
 package com.study.companytracker.repository.manager;
 
-import com.study.companytracker.model.Employee;
 
-import java.util.List;
-
+/**
+ * @Author Mo'men Magdy
+ * Employee repository interface
+ */
 public interface EmployeeRepo {
 }

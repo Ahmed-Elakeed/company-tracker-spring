@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * @Author Mo'men Magdy
+ * Employee data (JPA)
+ */
 @Repository
 public interface EmployeeData extends JpaRepository<Employee, Long>, EmployeeRepo {
 
