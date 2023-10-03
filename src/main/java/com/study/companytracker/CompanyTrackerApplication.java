@@ -17,3 +17,13 @@ public class CompanyTrackerApplication implements CommandLineRunner {
         CompanyTrackerLogger.LOGGER().info("Company Tracker Application Started");
     }
 }
+
+/*
+
+TODO List
+- Make all rest exception responses return from rest exception handlers
+- Add more details to mails
+- Add specified error codes and error messages and use them as exception messages in all service classes
+- Add all needed custom exception and listen to to them of thrown from any service class by AOP advice
+
+ */
