@@ -7,7 +7,6 @@ import com.study.companytracker.exception.NotFoundException;
 import com.study.companytracker.model.Department;
 import com.study.companytracker.repository.data.DepartmentData;
 import com.study.companytracker.util.ModelMapperUtil;
-import com.study.companytracker.util.enums.ErrorMessage;
 import com.study.companytracker.util.enums.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,48 +23,29 @@ public class DepartmentService {
      * @return GenericRestResponse with all departments and response details
      */
     public GenericRestResponse<?> getAllDepartment() {
-        try {
             return GenericRestResponse.builder()
                     .data(this.departmentData.fetchAllDepartments().stream().map(department -> ModelMapperUtil.MAPPER().map(department, DepartmentDTO.class)))
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        } catch (Exception exception) {
-            return GenericRestResponse.builder()
-                    .data(null)
-                    .responseMessage(ResponseMessage.FAIL)
-                    .responseCode(ResponseMessage.FAIL.getCode())
-                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
-                    .build();
-        }
     }
 
     public GenericRestResponse<?> getDepartmentByName(String name) {
-        try {
             Department department = this.departmentData.findDepartmentByName(name).orElseThrow(() -> new NotFoundException("No department found with name : " + name));
             return GenericRestResponse.builder()
                     .data(department)
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        } catch (NotFoundException notFoundException) {
-            return GenericRestResponse.builder()
-                    .data(null)
-                    .responseMessage(ResponseMessage.FAIL)
-                    .responseCode(ResponseMessage.FAIL.getCode())
-                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
-                    .build();
-        }
     }
 
 
     /**
      * @Author Mo'men Magdy
-     * @param departmentId
+     * @param departmentId (Long value)
      * @return GenericRestResponse with a department object and response details
      */
     public GenericRestResponse<?> getDepartmentById(Long departmentId) {
-        try {
             // finding department by id and throw no found exception if not exist
             Department department = this.departmentData.findDepartmentById(departmentId).orElseThrow(() -> new NotFoundException("No department found with id : " + departmentId));
             return GenericRestResponse.builder()
@@ -73,48 +53,23 @@ public class DepartmentService {
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        } catch (NotFoundException exception) {
-            return GenericRestResponse.builder()
-                    .data(null)
-                    .responseMessage(ResponseMessage.FAIL)
-                    .responseCode(ResponseMessage.FAIL.getCode())
-                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
-                    .build();
-        }
     }
 
     public GenericRestResponse<?> addDepartment(Department department) {
-        try {
             return GenericRestResponse.builder()
                     .data(departmentData.save(department))
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        } catch (NotFoundException exception) {
-            return GenericRestResponse.builder()
-                    .data(null)
-                    .responseMessage(ResponseMessage.FAIL)
-                    .responseCode(ResponseMessage.FAIL.getCode())
-                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
-                    .build();
-        }
     }
 
     public GenericRestResponse<?> deleteDepartmentById(Long id) {
-        try {
             this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No departments found with id : " + id));
             this.departmentData.deleteById(id);
             return GenericRestResponse.builder()
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
-        } catch (NotFoundException exception) {
-            return GenericRestResponse.builder()
-                    .responseMessage(ResponseMessage.FAIL)
-                    .responseCode(ResponseMessage.FAIL.getCode())
-                    .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
-                    .build();
-        }
     }
 
 }
