@@ -13,7 +13,7 @@ public class CompanyTrackerApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         CompanyTrackerLogger.LOGGER().info("Company Tracker Application Started");
     }
 }
@@ -25,5 +25,7 @@ TODO List
 - Add more details to mails
 - Add specified error codes and error messages and use them as exception messages in all service classes
 - Add all needed custom exception and listen to to them of thrown from any service class by AOP advice
+- Admin able with encoded password
+- JWT authentication
 
  */
