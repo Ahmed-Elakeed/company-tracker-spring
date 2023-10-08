@@ -1,6 +1,7 @@
 package com.study.companytracker.service;
 
 
+import com.study.companytracker.converter.DepartmentConverter;
 import com.study.companytracker.dto.DepartmentDTO;
 import com.study.companytracker.dto.GenericRestResponse;
 import com.study.companytracker.exception.NotFoundException;
@@ -10,6 +11,8 @@ import com.study.companytracker.util.ModelMapperUtil;
 import com.study.companytracker.util.enums.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,23 +52,27 @@ public class DepartmentService {
             // finding department by id and throw no found exception if not exist
             Department department = this.departmentData.findDepartmentById(departmentId).orElseThrow(() -> new NotFoundException("No department found with id : " + departmentId));
             return GenericRestResponse.builder()
+                    .data(DepartmentConverter.toDto(department))
+                    .responseMessage(ResponseMessage.SUCCESS)
+                    .responseCode(ResponseMessage.SUCCESS.getCode())
+                    .build();
+    }
+
+    public GenericRestResponse<?> addDepartment(DepartmentDTO departmentDTO) {
+        Department department = this.departmentData.save(DepartmentConverter.toEntity(departmentDTO));
+            return GenericRestResponse.builder()
                     .data(department)
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .build();
     }
 
-    public GenericRestResponse<?> addDepartment(Department department) {
-            return GenericRestResponse.builder()
-                    .data(departmentData.save(department))
-                    .responseMessage(ResponseMessage.SUCCESS)
-                    .responseCode(ResponseMessage.SUCCESS.getCode())
-                    .build();
-    }
-
     public GenericRestResponse<?> deleteDepartmentById(Long id) {
-            this.departmentData.findDepartmentById(id).orElseThrow(() -> new NotFoundException("No departments found with id : " + id));
-            this.departmentData.deleteById(id);
+            Optional<Department> department = this.departmentData.findDepartmentById(id);
+            if (department.isPresent())
+                this.departmentData.deleteById(id);
+            else
+                throw new NotFoundException("No Employees Found with this Id: " + id);
             return GenericRestResponse.builder()
                     .responseMessage(ResponseMessage.SUCCESS)
                     .responseCode(ResponseMessage.SUCCESS.getCode())

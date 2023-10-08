@@ -33,12 +33,12 @@ public class DepartmentController {
     @PostMapping
     public ResponseEntity<GenericRestResponse<?>> addDepartment(@RequestBody DepartmentDTO departmentDTO) {
         departmentDTO.setId(0L);
-        return ResponseEntity.ok(this.departmentService.saveDepartment(departmentDTO));
+        return ResponseEntity.ok(this.departmentService.addDepartment(departmentDTO));
     }
 
     @PutMapping
     public ResponseEntity<GenericRestResponse<?>> updateDepartment(@RequestBody DepartmentDTO department) {
-        return ResponseEntity.ok(this.departmentService.saveDepartment(department));
+        return ResponseEntity.ok(this.departmentService.addDepartment(department));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericRestResponse<?>> deleteDepartmentById(@PathVariable Long id){
