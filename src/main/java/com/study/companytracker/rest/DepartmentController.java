@@ -1,5 +1,6 @@
 package com.study.companytracker.rest;
 
+import com.study.companytracker.dto.DepartmentDTO;
 import com.study.companytracker.dto.GenericRestResponse;
 import com.study.companytracker.model.Department;
 import com.study.companytracker.service.DepartmentService;
@@ -30,14 +31,13 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public ResponseEntity<GenericRestResponse<?>> addDepartment(@RequestBody Department department) {
-        department.setId(0L);
-        return ResponseEntity.ok(this.departmentService.addDepartment(department));
+    public ResponseEntity<GenericRestResponse<?>> addDepartment(@RequestBody DepartmentDTO departmentDTO) {
+        return ResponseEntity.ok(this.departmentService.saveDepartment(departmentDTO));
     }
 
     @PutMapping
-    public ResponseEntity<GenericRestResponse<?>> updateDepartment(@RequestBody Department department) {
-        return ResponseEntity.ok(this.departmentService.addDepartment(department));
+    public ResponseEntity<GenericRestResponse<?>> updateDepartment(@RequestBody DepartmentDTO departmentDTO) {
+        return ResponseEntity.ok(this.departmentService.saveDepartment(departmentDTO));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericRestResponse<?>> deleteDepartmentById(@PathVariable Long id){
