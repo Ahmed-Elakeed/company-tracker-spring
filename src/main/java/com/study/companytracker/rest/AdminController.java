@@ -7,10 +7,7 @@ import com.study.companytracker.dto.LoginDTO;
 import com.study.companytracker.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/admins")
@@ -27,8 +24,19 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<GenericRestResponse<?>> addAdmin(@RequestBody AdminDTO adminDTO){
-        return ResponseEntity.ok(this.adminService.saveNewAdmin(adminDTO));
+    public ResponseEntity<GenericRestResponse<?>> saveOrUpdateAdmin(@RequestBody AdminDTO adminDTO){
+        return ResponseEntity.ok(this.adminService.saveOrUpdateAdmin(adminDTO));
+    }
+
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<GenericRestResponse<?>> deleteAdmin(@PathVariable(value = "id") Long adminId){
+        return ResponseEntity.ok(this.adminService.deleteAdmin(adminId));
+    }
+
+    @GetMapping
+    public ResponseEntity<GenericRestResponse<?>> fetchAllAdmins(){
+        return ResponseEntity.ok(this.adminService.fetchAllAdmins());
     }
 
 

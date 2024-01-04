@@ -31,7 +31,7 @@ public class ProjectConverter {
                 .description(projectDTO.getDescription())
                 .status(projectDTO.getStatus())
                 .department(Department.builder()
-                        .id(projectDTO.getId())
+                        .id(projectDTO.getDepartmentId())
                         .build())
                 .build();
     }

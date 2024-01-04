@@ -1,7 +1,6 @@
 package com.study.companytracker.dto;
 
 
-import com.study.companytracker.util.enums.AdminRole;
 import lombok.*;
 
 @Data
@@ -12,6 +11,7 @@ import lombok.*;
 public class AdminLoginResponseDTO {
     private Long id;
     private String token;
+    private String name;
     private String email;
-    private AdminRole role;
+    private Integer role;
 }

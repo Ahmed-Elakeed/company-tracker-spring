@@ -19,6 +19,9 @@ public class Admin {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "name",nullable = false,length = 128)
+    private String name;
+
     @Column(name = "email",unique = true,nullable = false,length = 128)
     private String email;
 

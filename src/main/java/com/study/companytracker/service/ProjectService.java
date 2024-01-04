@@ -32,7 +32,7 @@ public class ProjectService {
                 .build();
     }
 
-    public GenericRestResponse<?> addProject(ProjectDTO projectDTO) {
+    public GenericRestResponse<?> saveOrUpdateProject(ProjectDTO projectDTO) {
         Project project = this.projectData.save(ProjectConverter.toEntity(projectDTO));
         return GenericRestResponse.builder()
                 .data(project)

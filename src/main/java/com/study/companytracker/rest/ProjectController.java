@@ -22,13 +22,8 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<GenericRestResponse<?>> addProject(@RequestBody ProjectDTO projectDTO) {
-        return ResponseEntity.ok(this.projectService.addProject(projectDTO));
-    }
-
-    @PutMapping
     public ResponseEntity<GenericRestResponse<?>> saveOrUpdateProject(@RequestBody ProjectDTO projectDTO) {
-        return ResponseEntity.ok(this.projectService.addProject(projectDTO));
+        return ResponseEntity.ok(this.projectService.saveOrUpdateProject(projectDTO));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericRestResponse<?>> deleteProjectById(@PathVariable Long id){

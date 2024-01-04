@@ -1,13 +1,11 @@
 package com.study.companytracker.service;
 
 
-import com.study.companytracker.dto.AdminDTO;
-import com.study.companytracker.dto.AdminLoginResponseDTO;
-import com.study.companytracker.dto.GenericRestResponse;
-import com.study.companytracker.dto.LoginDTO;
+import com.study.companytracker.converter.AdminConverter;
+import com.study.companytracker.dto.*;
+import com.study.companytracker.exception.NotFoundException;
 import com.study.companytracker.model.Admin;
 import com.study.companytracker.repository.data.AdminData;
-import com.study.companytracker.util.ModelMapperUtil;
 import com.study.companytracker.util.enums.ErrorMessage;
 import com.study.companytracker.util.enums.ResponseMessage;
 import io.jsonwebtoken.Jwts;
@@ -48,9 +46,13 @@ public class AdminService {
                 SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public GenericRestResponse<?> saveNewAdmin(AdminDTO adminDTO) {
+    public GenericRestResponse<?> saveOrUpdateAdmin(AdminDTO adminDTO) {
+        Admin updateCaseAdmin = null;
+        if(adminDTO.getId()!=null) {
+            updateCaseAdmin = this.adminData.findById(adminDTO.getId()).orElse(null);
+        }
         Optional<Admin> optionalAdmin = this.adminData.findAdminByEmail(adminDTO.getEmail());
-        if (optionalAdmin.isPresent()) {
+        if (optionalAdmin.isPresent() && updateCaseAdmin==null) {
             return GenericRestResponse.builder()
                     .data(null)
                     .responseCode(ResponseMessage.FAIL.getCode())
@@ -60,7 +62,7 @@ public class AdminService {
         } else {
             adminDTO.setPassword(this.passwordEncoder.encode(adminDTO.getPassword()));
             return GenericRestResponse.builder()
-                    .data(this.adminData.save(ModelMapperUtil.MAPPER().map(adminDTO, Admin.class)))
+                    .data(this.adminData.save(AdminConverter.toEntity(adminDTO)))
                     .responseCode(ResponseMessage.SUCCESS.getCode())
                     .responseMessage(ResponseMessage.SUCCESS)
                     .errorMessage(null)
@@ -89,7 +91,8 @@ public class AdminService {
                                 .id(admin.getId())
                                 .token(jwtToken)
                                 .email(admin.getEmail())
-                                .role(admin.getRole())
+                                .role(admin.getRole().ordinal())
+                                .name(admin.getName())
                                 .build())
                         .responseMessage(ResponseMessage.SUCCESS)
                         .responseCode(ResponseMessage.SUCCESS.getCode())
@@ -102,6 +105,26 @@ public class AdminService {
                 .responseCode(ResponseMessage.FAIL.getCode())
                 .responseMessage(ResponseMessage.FAIL)
                 .errorMessage(ErrorMessage.INVALID_CREDENTIALS.getMessage())
+                .build();
+    }
+
+    public GenericRestResponse<?> deleteAdmin(Long adminId) {
+        Optional<Admin> department = this.adminData.findById(adminId);
+        if (department.isPresent())
+            this.adminData.deleteById(adminId);
+        else
+            throw new NotFoundException("No Admins Found with this Id: " + adminId);
+        return GenericRestResponse.builder()
+                .responseMessage(ResponseMessage.SUCCESS)
+                .responseCode(ResponseMessage.SUCCESS.getCode())
+                .build();
+    }
+
+    public GenericRestResponse<?> fetchAllAdmins() {
+        return GenericRestResponse.builder()
+                .data(this.adminData.findAll().stream().map(AdminConverter::toDto))
+                .responseMessage(ResponseMessage.SUCCESS)
+                .responseCode(ResponseMessage.SUCCESS.getCode())
                 .build();
     }
 }
