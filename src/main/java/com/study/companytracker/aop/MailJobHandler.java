@@ -22,11 +22,11 @@ public class MailJobHandler {
     private final JavaMailSender mailSender;
 
 
-    @AfterReturning(value = "com.study.companytracker.configuration.PointCutConfiguration.exceptionHandlerPointCut()",returning = "genericRestResponse")
-    public void exceptionMailHandler(GenericRestResponse<?> genericRestResponse){
-        System.out.println(this.mails);
-        this.mails.forEach(mail -> this.sendMail(mail,genericRestResponse));
-    }
+//    @AfterReturning(value = "com.study.companytracker.configuration.PointCutConfiguration.exceptionHandlerPointCut()",returning = "genericRestResponse")
+//    public void exceptionMailHandler(GenericRestResponse<?> genericRestResponse){
+//        System.out.println(this.mails);
+//        this.mails.forEach(mail -> this.sendMail(mail,genericRestResponse));
+//    }
 
     private void sendMail(String to, GenericRestResponse<?> genericRestResponse) {
         SimpleMailMessage message = new SimpleMailMessage();

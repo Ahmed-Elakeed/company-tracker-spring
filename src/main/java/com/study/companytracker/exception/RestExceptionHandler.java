@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(value = NotFoundException.class)
-    public GenericRestResponse<?> notFoundExceptionHandler(NotFoundException exception){
+    @ExceptionHandler(value = {Exception.class, RuntimeException.class})
+    public GenericRestResponse<?> allExceptionHandler(Exception exception) {
         return GenericRestResponse.builder()
                 .responseMessage(ResponseMessage.FAIL)
                 .responseCode(ResponseMessage.FAIL.getCode())

@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class DepartmentRepoImpl implements DepartmentRepo {
 
     @PersistenceContext

@@ -1,5 +1,6 @@
 package com.study.companytracker.rest;
 
+import com.study.companytracker.dto.EmployeeDTO;
 import com.study.companytracker.dto.GenericRestResponse;
 import com.study.companytracker.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -16,28 +17,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-    // Injecting Employee Service
     private final EmployeeService employeeService;
 
 
-    /**
-     * @Author Mo'men Magdy
-     * Endpoint to fetch all employees
-     * @return ResponseEntity with GenericRestResponse includes all employees and response details
-     */
     @GetMapping
     public ResponseEntity<GenericRestResponse<?>> getAllEmployees(){
         return ResponseEntity.ok(this.employeeService.getAllEmployees());
     }
 
-    /**
-     * @Author Mo'men Magdy
-     * Endpoint to fetch all employees within a department
-     * @Param Department name
-     * @return ResponseEntity with GenericRestResponse includes all employees and response details
-     */
-    @GetMapping("/{departmentName}")
-    public ResponseEntity<GenericRestResponse<?>> getEmployeesByDepartmentName(@PathVariable String departmentName){
-        return ResponseEntity.ok(this.employeeService.getEmployeesByDepartmentName(departmentName));
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity<GenericRestResponse<?>> deleteEmployeeById(@PathVariable(value = "id") Long id){
+        return ResponseEntity.ok(this.employeeService.deleteEmployeeById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<GenericRestResponse<?>> saveOrUpdateEmployee(@RequestBody EmployeeDTO employeeDTO){
+        return ResponseEntity.ok(this.employeeService.saveOrUpdateEmployee(employeeDTO));
     }
 }

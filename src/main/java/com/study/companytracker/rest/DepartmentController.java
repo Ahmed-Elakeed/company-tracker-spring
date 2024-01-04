@@ -2,7 +2,6 @@ package com.study.companytracker.rest;
 
 import com.study.companytracker.dto.DepartmentDTO;
 import com.study.companytracker.dto.GenericRestResponse;
-import com.study.companytracker.model.Department;
 import com.study.companytracker.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +19,6 @@ public class DepartmentController {
         return ResponseEntity.ok(this.departmentService.getAllDepartment());
     }
 
-    @GetMapping(path = "/name/{name}")
-    public ResponseEntity<GenericRestResponse<?>> fetchDepartmentByName(@PathVariable(value = "name") String name) {
-        return ResponseEntity.ok(this.departmentService.getDepartmentByName(name));
-    }
-
-    @GetMapping("/id/{id}")
-    public ResponseEntity<GenericRestResponse<?>> getDepartmentById(@PathVariable Long id) {
-        return ResponseEntity.ok(this.departmentService.getDepartmentById(id));
-    }
-
     @PostMapping
     public ResponseEntity<GenericRestResponse<?>> addDepartment(@RequestBody DepartmentDTO departmentDTO) {
         departmentDTO.setId(0L);
@@ -37,12 +26,22 @@ public class DepartmentController {
     }
 
     @PutMapping
-    public ResponseEntity<GenericRestResponse<?>> updateDepartment(@RequestBody DepartmentDTO department) {
+    public ResponseEntity<GenericRestResponse<?>> saveOrUpdateDepartment(@RequestBody DepartmentDTO department) {
         return ResponseEntity.ok(this.departmentService.addDepartment(department));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericRestResponse<?>> deleteDepartmentById(@PathVariable Long id){
         return ResponseEntity.ok(this.departmentService.deleteDepartmentById(id));
+    }
+
+    @GetMapping(path = "/{departmentId}/employees")
+    public ResponseEntity<GenericRestResponse<?>> fetchDepartmentEmployees(@PathVariable(value = "departmentId") Long departmentId){
+        return ResponseEntity.ok(this.departmentService.fetchDepartmentEmployees(departmentId));
+    }
+
+    @GetMapping(path = "/{departmentId}/projects")
+    public ResponseEntity<GenericRestResponse<?>> fetchDepartmentProjects(@PathVariable(value = "departmentId") Long departmentId){
+        return ResponseEntity.ok(this.departmentService.fetchDepartmentProjects(departmentId));
     }
 }
 

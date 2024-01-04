@@ -7,23 +7,29 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
-@Table(name = "departments")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+@Entity
+@ToString(exclude = {"employees","projects"})
+@Table(name = "departments")
 public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "name",unique = true,length = 64)
     private String name;
 
     @OneToMany(mappedBy = "department",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Employee> employees;
+
+    @OneToMany(mappedBy = "department",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Project> projects;
 }
