@@ -127,4 +127,8 @@ public class AdminService {
                 .responseCode(ResponseMessage.SUCCESS.getCode())
                 .build();
     }
+
+    public Admin getAdminByEmail(String email) {
+        return this.adminData.findAdminByEmail(email).orElse(null);
+    }
 }

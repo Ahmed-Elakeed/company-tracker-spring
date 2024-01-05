@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ResponseMessage {
 
     SUCCESS(200L),
-    FAIL(500L);
+    FAIL(500L),
+    AUTHENTICATION_FAILURE(300L);
 
 
     private final Long code;
