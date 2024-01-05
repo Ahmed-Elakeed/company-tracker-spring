@@ -56,7 +56,7 @@ public class RestInterceptor implements HandlerInterceptor{
                     if (jwt.getBody().get("email") != null) {
                         Admin admin = this.adminService.getAdminByEmail((String) jwt.getBody().get("email"));
                         if (admin != null) {
-                            LOGGER.info("User Found");
+                            LOGGER.info("Admin Found");
                             boolean sameSessionId = admin.getSessionId().equals(authToken);
                             if(!sameSessionId) {
                                 throw new AuthenticationException("No admin found for this token, please login again");
@@ -66,7 +66,7 @@ public class RestInterceptor implements HandlerInterceptor{
                         return false;
                     }
                 } catch (Exception exception) {
-                    LOGGER.info("Error While Extracting User Data");
+                    LOGGER.info("Error While Extracting Admin Data");
                     throw new AuthenticationException("No admin found for this token, please login again");
                 }
             } else {
