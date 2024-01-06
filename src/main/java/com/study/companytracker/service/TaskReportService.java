@@ -33,6 +33,7 @@ public class TaskReportService {
     private List<String> receivers;
 
 
+//  @Scheduled(cron = "0 * * * * *") // Run every minute
     @Scheduled(cron = "0 0 11 * * ?") // This method will be executed every day at 11 am
     public void csvTasksReportSchedule() throws IOException {
         CompanyTrackerLogger.LOGGER().info("Fetching tasks report data ...");
