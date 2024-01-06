@@ -6,17 +6,18 @@ import com.study.companytracker.repository.data.TaskData;
 import com.study.companytracker.util.CSVUtil;
 import com.study.companytracker.util.CompanyTrackerLogger;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -32,23 +33,23 @@ public class TaskReportService {
     private List<String> receivers;
 
 
-    //@Scheduled(cron = "0 0 11 * * ?")
-    public void csvTasksReportSchedule() {
+    @Scheduled(cron = "0 0 11 * * ?")
+    public void csvTasksReportSchedule() throws IOException {
         CompanyTrackerLogger.LOGGER().info("Fetching tasks report data ...");
         List<TaskReportDTO> taskReportDTOList = this.taskData.fetchTasksReportData();
         CompanyTrackerLogger.LOGGER().info("Fetched tasks report data -> {}", taskReportDTOList);
 
         CompanyTrackerLogger.LOGGER().info("Generating CSV report file with fetched report data");
-        CSVPrinter csvPrinter = CSVUtil.generateTasksReportCSVFile(taskReportDTOList);
 
-        InputStreamSource csvFileSource = () -> new ByteArrayInputStream(csvPrinter.toString().getBytes(StandardCharsets.UTF_8));
+        byte[] csvFileBytes = Files.readAllBytes(Paths.get(CSVUtil.generateTasksReportCSVFile(taskReportDTOList)));
+        ByteArrayResource csvResource = new ByteArrayResource(csvFileBytes);
 
-        this.receivers.forEach(receiver -> this.sendTaskReportMail(receiver, csvFileSource));
+        this.receivers.forEach(receiver -> this.sendTaskReportMail(receiver, csvResource));
         CompanyTrackerLogger.LOGGER().info("Schedule job for tasks report finished");
     }
 
 
-    private void sendTaskReportMail(String to, InputStreamSource file) {
+    private void sendTaskReportMail(String to, ByteArrayResource file) {
         MimeMessage message = this.mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -58,7 +59,7 @@ public class TaskReportService {
             helper.setText("Please check attached file for daily tasks report");
 
             CompanyTrackerLogger.LOGGER().info("Adding CSV file as attachment in the mail");
-            helper.addAttachment("Tasks Report", file, "text/csv");
+            helper.addAttachment("Tasks-Report.csv", file);
 
             CompanyTrackerLogger.LOGGER().info("Sending mail for receiver");
             mailSender.send(message);

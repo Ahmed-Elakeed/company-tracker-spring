@@ -4,10 +4,10 @@ import com.study.companytracker.dto.TaskReportDTO;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
-import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class CSVUtil {
@@ -17,9 +17,9 @@ public class CSVUtil {
     private CSVUtil() {
     }
 
-    public static CSVPrinter generateTasksReportCSVFile(List<TaskReportDTO> taskReportDTOList) {
+    public static String generateTasksReportCSVFile(List<TaskReportDTO> taskReportDTOList) {
         try (
-                BufferedWriter writer = Files.newBufferedWriter(Paths.get(CSV_FILE));
+                FileWriter writer = new FileWriter(CSV_FILE);
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader(
@@ -40,15 +40,23 @@ public class CSVUtil {
                         taskReportDTO.getProjectStatus(),
                         taskReportDTO.getEmployeeName(),
                         taskReportDTO.getTaskName(),
-                        taskReportDTO.getTaskStartDate(),
-                        taskReportDTO.getTaskEndDate(),
+                        formatDateToString(taskReportDTO.getTaskStartDate()),
+                        formatDateToString(taskReportDTO.getTaskEndDate()),
                         taskReportDTO.getTaskStatus()
                 );
             }
             csvPrinter.flush();
-            return csvPrinter;
+            return CSV_FILE;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String formatDateToString(Date date) {
+        // Create a SimpleDateFormat object with the desired date format
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy");
+
+        // Format the date using SimpleDateFormat and return the formatted string
+        return sdf.format(date);
     }
 }
