@@ -55,7 +55,7 @@ public class TaskReportService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom("dev@company.com");
             helper.setTo(to);
-            helper.setSubject("Daily Task Reports");
+            helper.setSubject("Daily Tasks Report");
             helper.setText("Please check attached file for daily tasks report");
 
             CompanyTrackerLogger.LOGGER().info("Adding CSV file as attachment in the mail");
