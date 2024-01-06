@@ -29,13 +29,14 @@ public class TaskController {
     public ResponseEntity<GenericRestResponse<?>> updateTask(@RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(this.taskService.addTask(taskDTO));
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<GenericRestResponse<?>> deleteTaskById(@PathVariable Long id){
+    public ResponseEntity<GenericRestResponse<?>> deleteTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(this.taskService.deleteTaskById(id));
     }
 
     @GetMapping(path = "/report")
-    public ResponseEntity<GenericRestResponse<?>> sendTasksReportMail(@RequestParam(value = "taskStatus")TaskStatus taskStatus){
+    public ResponseEntity<GenericRestResponse<?>> sendTasksReportMail(@RequestParam(value = "taskStatus", required = false) TaskStatus taskStatus) {
         return ResponseEntity.ok(this.taskService.sendTasksReportMail(taskStatus));
     }
 }

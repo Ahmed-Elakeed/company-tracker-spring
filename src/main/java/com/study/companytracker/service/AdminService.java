@@ -81,7 +81,7 @@ public class AdminService {
                         .setSubject(loginDTO.getEmail())
                         .setId(UUID.randomUUID().toString())
                         .setIssuedAt(Date.from(Instant.now()))
-                        .setExpiration(Date.from(Instant.now().plus(5L, ChronoUnit.MINUTES)))
+                        .setExpiration(Date.from(Instant.now().plus(15L, ChronoUnit.MINUTES)))
                         .signWith(hmacKey)
                         .compact();
                 admin.setSessionId(jwtToken);
