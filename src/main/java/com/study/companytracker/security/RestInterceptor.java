@@ -21,13 +21,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class RestInterceptor implements HandlerInterceptor{
-    private static final Logger LOGGER= LoggerFactory.getLogger(RestInterceptor.class);
+public class RestInterceptor implements HandlerInterceptor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestInterceptor.class);
 
+    private List<String> legalUrlSectors;
     private static Key hmacKey;
 
     private final AdminService adminService;
@@ -40,12 +43,18 @@ public class RestInterceptor implements HandlerInterceptor{
     private void securityInit() {
         hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
                 SignatureAlgorithm.HS256.getJcaName());
+
+        this.legalUrlSectors = Arrays.asList(
+                "login",
+                "swagger",
+                "api-docs"
+        );
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         LOGGER.info("PreHandle Request");
-        if (!request.getServletPath().contains("login")) {
+        if (this.requestUrlNotContain(request, this.legalUrlSectors)) {
             LOGGER.info("Not Authentication Request");
             if (request.getHeader("authToken") != null) {
                 LOGGER.info("Token Found");
@@ -58,7 +67,7 @@ public class RestInterceptor implements HandlerInterceptor{
                         if (admin != null) {
                             LOGGER.info("Admin Found");
                             boolean sameSessionId = admin.getSessionId().equals(authToken);
-                            if(!sameSessionId) {
+                            if (!sameSessionId) {
                                 throw new AuthenticationException("No admin found for this token, please login again");
                             }
                             return true;
@@ -74,7 +83,7 @@ public class RestInterceptor implements HandlerInterceptor{
                 throw new AuthenticationException("No access token found in the request");
             }
         } else {
-            LOGGER.info("Authentication Request");
+            LOGGER.info("Authentication or Swagger Request");
             return true;
         }
         return false;
@@ -88,5 +97,14 @@ public class RestInterceptor implements HandlerInterceptor{
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    }
+
+    private boolean requestUrlNotContain(HttpServletRequest request, List<String> urlSectors) {
+        for (String sector : urlSectors) {
+            if (request.getServletPath().contains(sector)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

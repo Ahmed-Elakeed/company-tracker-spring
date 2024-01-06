@@ -18,3 +18,5 @@ public class CompanyTrackerApplication implements CommandLineRunner {
         CompanyTrackerLogger.LOGGER().info("Company Tracker Application Started");
     }
 }
+
+// todo -> implement a frontend button send a tasks report by task status

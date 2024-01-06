@@ -19,7 +19,31 @@ public class TaskRepoImpl implements TaskRepo {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<TaskReportDTO> fetchTasksReportData() {
+    public List<TaskReportDTO> fetchTasksReportData(TaskStatus taskStatus) {
+        String queryString = constructQuery(taskStatus);
+
+        Query query = this.entityManager.createQuery(queryString);
+
+        if (taskStatus != null) {
+            query.setParameter(1, taskStatus);
+        }
+        List<Object[]> resultList = query.getResultList();
+
+        return resultList.stream()
+                .map(row -> TaskReportDTO.builder()
+                        .departmentName((String) row[0])
+                        .projectName((String) row[1])
+                        .projectStatus((ProjectStatus) row[2])
+                        .employeeName((String) row[3])
+                        .taskName((String) row[4])
+                        .taskStartDate((Date) row[5])
+                        .taskEndDate((Date) row[6])
+                        .taskStatus((TaskStatus) row[7])
+                        .build()
+                ).collect(Collectors.toList());
+    }
+
+    private static String constructQuery(TaskStatus taskStatus) {
         String queryString = "select d.name as departmentName," +
                 "p.name as projectName," +
                 "p.status as projectStatus," +
@@ -35,21 +59,9 @@ public class TaskRepoImpl implements TaskRepo {
                 "left join fetch Department d " +
                 "on d.id=p.department.id";
 
-        Query query = this.entityManager.createQuery(queryString);
-
-        List<Object[]> resultList = query.getResultList();
-
-        return resultList.stream()
-                .map(row -> TaskReportDTO.builder()
-                        .departmentName((String) row[0])
-                        .projectName((String) row[1])
-                        .projectStatus((ProjectStatus) row[2])
-                        .employeeName((String) row[3])
-                        .taskName((String) row[4])
-                        .taskStartDate((Date) row[5])
-                        .taskEndDate((Date) row[6])
-                        .taskStatus((TaskStatus) row[7])
-                        .build()
-                ).collect(Collectors.toList());
+        if (taskStatus != null) {
+            queryString += " where t.status=?1";
+        }
+        return queryString;
     }
 }

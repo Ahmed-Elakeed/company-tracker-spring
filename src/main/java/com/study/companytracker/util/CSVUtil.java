@@ -3,9 +3,12 @@ package com.study.companytracker.util;
 import com.study.companytracker.dto.TaskReportDTO;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.springframework.core.io.ByteArrayResource;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +20,7 @@ public class CSVUtil {
     private CSVUtil() {
     }
 
-    public static String generateTasksReportCSVFile(List<TaskReportDTO> taskReportDTOList) {
+    public static ByteArrayResource generateTasksReportCSVFile(List<TaskReportDTO> taskReportDTOList) {
         try (
                 FileWriter writer = new FileWriter(CSV_FILE);
 
@@ -46,7 +49,8 @@ public class CSVUtil {
                 );
             }
             csvPrinter.flush();
-            return CSV_FILE;
+            byte[] csvFileBytes = Files.readAllBytes(Paths.get(CSV_FILE));
+            return new ByteArrayResource(csvFileBytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
