@@ -72,9 +72,10 @@ public class TaskService {
     public GenericRestResponse<?> sendTasksReportMail(TaskStatus taskStatus) {
         List<TaskReportDTO> taskReportDTOList = this.taskData.fetchTasksReportData(taskStatus);
         ByteArrayResource csvResource = CSVUtil.generateTasksReportCSVFile(taskReportDTOList);
+        String filterStatus = taskStatus == null ? "ALL" : String.valueOf(taskStatus);
         this.receivers.forEach(receiver -> this.mailService.sendMail(
                         receiver,
-                        "Daily Tasks Report",
+                        "Daily Tasks Report : " + filterStatus,
                         "Please check attached file for daily tasks report",
                         Collections.singletonList(
                                 MailAttachmentDTO.builder()
