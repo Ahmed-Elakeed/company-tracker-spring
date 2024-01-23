@@ -24,11 +24,6 @@ public class DepartmentController {
         departmentDTO.setId(0L);
         return ResponseEntity.ok(this.departmentService.addDepartment(departmentDTO));
     }
-
-    @PutMapping
-    public ResponseEntity<GenericRestResponse<?>> saveOrUpdateDepartment(@RequestBody DepartmentDTO department) {
-        return ResponseEntity.ok(this.departmentService.addDepartment(department));
-    }
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericRestResponse<?>> deleteDepartmentById(@PathVariable Long id){
         return ResponseEntity.ok(this.departmentService.deleteDepartmentById(id));
