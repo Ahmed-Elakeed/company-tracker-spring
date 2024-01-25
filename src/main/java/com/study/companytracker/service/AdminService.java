@@ -131,4 +131,22 @@ public class AdminService {
     public Admin getAdminByEmail(String email) {
         return this.adminData.findAdminByEmail(email).orElse(null);
     }
+
+    public GenericRestResponse<?> validatePassword(LoginDTO loginDTO) {
+        Optional<Admin> optionalAdmin = this.adminData.findAdminByEmail(loginDTO.getEmail());
+        if(!optionalAdmin.isPresent()){
+            throw new NotFoundException("No Admin found with this email");
+        }else{
+            Admin admin=optionalAdmin.get();
+            if(this.passwordEncoder.matches(loginDTO.getPassword(), admin.getPassword())){
+                return GenericRestResponse.builder()
+                        .data(true)
+                        .responseMessage(ResponseMessage.SUCCESS)
+                        .responseCode(ResponseMessage.SUCCESS.getCode())
+                        .build();
+            }else{
+                throw new NotFoundException("Not valid password");
+            }
+        }
+    }
 }

@@ -39,5 +39,10 @@ public class AdminController {
         return ResponseEntity.ok(this.adminService.fetchAllAdmins());
     }
 
+    @PostMapping(path = "/validate-password")
+    public ResponseEntity<GenericRestResponse<?>> validatePassword(@RequestBody LoginDTO loginDTO){
+        return ResponseEntity.ok(this.adminService.validatePassword(loginDTO));
+    }
+
 
 }
