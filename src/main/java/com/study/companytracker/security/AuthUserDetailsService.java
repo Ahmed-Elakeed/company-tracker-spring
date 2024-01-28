@@ -1,6 +1,7 @@
 package com.study.companytracker.security;
 
 import com.study.companytracker.model.Admin;
+import com.study.companytracker.model.Role;
 import com.study.companytracker.repository.data.AdminData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .withUsername(admin.getEmail())
                 .password(admin.getPassword())
-                .roles(new String[]{})
+                .roles(admin.getRoleList().stream().map(Role::getName).toArray(String[]::new))
                 .build();
     }
 }

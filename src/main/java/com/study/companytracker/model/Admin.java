@@ -4,6 +4,7 @@ import com.study.companytracker.util.enums.AdminRole;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Data
@@ -19,18 +20,26 @@ public class Admin {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name",nullable = false,length = 128)
+    @Column(name = "name", nullable = false, length = 128)
     private String name;
 
-    @Column(name = "email",unique = true,nullable = false,length = 128)
+    @Column(name = "email", unique = true, nullable = false, length = 128)
     private String email;
 
-    @Column(name = "password",length = 1024,nullable = false)
+    @Column(name = "password", length = 1024, nullable = false)
     private String password;
 
-    @Column(name = "role",nullable = false)
+    @Column(name = "role", nullable = false)
     private AdminRole role;
 
-    @Column(name = "session_id",length = 1024)
+    @Column(name = "session_id", length = 1024)
     private String sessionId;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "admin_role",
+            joinColumns = @JoinColumn(name = "admin_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private List<Role> roleList;
 }

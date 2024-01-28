@@ -7,6 +7,7 @@ import com.study.companytracker.dto.LoginDTO;
 import com.study.companytracker.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,6 +30,7 @@ public class AdminController {
 
 
     @DeleteMapping(path = "/{id}")
+    @PreAuthorize("hasRole('MASTER:ROLE')")
     public ResponseEntity<GenericRestResponse<?>> deleteAdmin(@PathVariable(value = "id") Long adminId,@RequestHeader(value = "authToken") String authToken){
         return ResponseEntity.ok(this.adminService.deleteAdmin(adminId));
     }
