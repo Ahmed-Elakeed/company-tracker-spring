@@ -15,4 +15,5 @@ public class InterceptorConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(this.restInterceptor);
     }
+
 }

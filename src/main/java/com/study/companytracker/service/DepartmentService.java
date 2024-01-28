@@ -24,7 +24,7 @@ public class DepartmentService {
 
     public GenericRestResponse<?> getAllDepartment() {
         return GenericRestResponse.builder()
-                .data(this.departmentData.fetchAllDepartments().stream().map(department -> ModelMapperUtil.MAPPER().map(department, DepartmentDTO.class)))
+                .data(this.departmentData.fetchAllDepartments().stream().map(DepartmentConverter::toDto))
                 .responseMessage(ResponseMessage.SUCCESS)
                 .responseCode(ResponseMessage.SUCCESS.getCode())
                 .build();

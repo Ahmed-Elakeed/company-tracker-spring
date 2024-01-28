@@ -17,30 +17,29 @@ public class AdminController {
     private final AdminService adminService;
 
 
-    @PostMapping
-    @RequestMapping(path = "/login")
+    @PostMapping(path = "/login")
     public ResponseEntity<GenericRestResponse<?>> adminLogin(@RequestBody LoginDTO loginDTO){
         return ResponseEntity.ok(this.adminService.adminLogin(loginDTO));
     }
 
     @PostMapping
-    public ResponseEntity<GenericRestResponse<?>> saveOrUpdateAdmin(@RequestBody AdminDTO adminDTO){
+    public ResponseEntity<GenericRestResponse<?>> saveOrUpdateAdmin(@RequestBody AdminDTO adminDTO,@RequestHeader(value = "authToken") String authToken){
         return ResponseEntity.ok(this.adminService.saveOrUpdateAdmin(adminDTO));
     }
 
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<GenericRestResponse<?>> deleteAdmin(@PathVariable(value = "id") Long adminId){
+    public ResponseEntity<GenericRestResponse<?>> deleteAdmin(@PathVariable(value = "id") Long adminId,@RequestHeader(value = "authToken") String authToken){
         return ResponseEntity.ok(this.adminService.deleteAdmin(adminId));
     }
 
     @GetMapping
-    public ResponseEntity<GenericRestResponse<?>> fetchAllAdmins(){
+    public ResponseEntity<GenericRestResponse<?>> fetchAllAdmins(@RequestHeader(value = "authToken") String authToken){
         return ResponseEntity.ok(this.adminService.fetchAllAdmins());
     }
 
     @PostMapping(path = "/validate-password")
-    public ResponseEntity<GenericRestResponse<?>> validatePassword(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<GenericRestResponse<?>> validatePassword(@RequestBody LoginDTO loginDTO,@RequestHeader(value = "authToken") String authToken){
         return ResponseEntity.ok(this.adminService.validatePassword(loginDTO));
     }
 

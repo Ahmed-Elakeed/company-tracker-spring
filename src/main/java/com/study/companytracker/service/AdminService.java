@@ -6,45 +6,24 @@ import com.study.companytracker.dto.*;
 import com.study.companytracker.exception.NotFoundException;
 import com.study.companytracker.model.Admin;
 import com.study.companytracker.repository.data.AdminData;
+import com.study.companytracker.security.JwtTokenProvider;
 import com.study.companytracker.util.enums.ErrorMessage;
 import com.study.companytracker.util.enums.ResponseMessage;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.crypto.spec.SecretKeySpec;
-import java.security.Key;
-
-import io.jsonwebtoken.SignatureAlgorithm;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Base64;
-import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
 
-    @Value("${auth.secret}")
-    private String secret;
-
-    private static Key hmacKey;
-
     private final AdminData adminData;
 
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @PostConstruct
-    private void securityInit() {
-        hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-                SignatureAlgorithm.HS256.getJcaName());
-    }
+    private final JwtTokenProvider jwtTokenProvider;
 
     public GenericRestResponse<?> saveOrUpdateAdmin(AdminDTO adminDTO) {
         Admin updateCaseAdmin = null;
@@ -75,15 +54,7 @@ public class AdminService {
         if (optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
             if (this.passwordEncoder.matches(loginDTO.getPassword(), admin.getPassword())) {
-                String jwtToken = Jwts.builder()
-                        .claim("email", loginDTO.getEmail())
-                        .claim("password", loginDTO.getPassword())
-                        .setSubject(loginDTO.getEmail())
-                        .setId(UUID.randomUUID().toString())
-                        .setIssuedAt(Date.from(Instant.now()))
-                        .setExpiration(Date.from(Instant.now().plus(15L, ChronoUnit.MINUTES)))
-                        .signWith(hmacKey)
-                        .compact();
+                String jwtToken = this.jwtTokenProvider.generateToken(loginDTO);
                 admin.setSessionId(jwtToken);
                 this.adminData.save(admin);
                 return GenericRestResponse.builder()

@@ -1,92 +1,23 @@
 package com.study.companytracker.security;
 
-import com.study.companytracker.model.Admin;
-import com.study.companytracker.service.AdminService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.annotation.PostConstruct;
-import javax.crypto.spec.SecretKeySpec;
-import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.security.Key;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
 
-@RestController
-@RequiredArgsConstructor
+@Component
 public class RestInterceptor implements HandlerInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestInterceptor.class);
 
-    private List<String> legalUrlSectors;
-    private static Key hmacKey;
-
-    private final AdminService adminService;
-
-    @Value("${auth.secret}")
-    private String secret;
-
-
-    @PostConstruct
-    private void securityInit() {
-        hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-                SignatureAlgorithm.HS256.getJcaName());
-
-        this.legalUrlSectors = Arrays.asList(
-                "login",
-                "swagger",
-                "api-docs"
-        );
-    }
-
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        LOGGER.info("PreHandle Request");
-        if (this.requestUrlNotContain(request, this.legalUrlSectors)) {
-            LOGGER.info("Not Authentication Request");
-            if (request.getHeader("authToken") != null) {
-                LOGGER.info("Token Found");
-                String authToken = request.getHeader("authToken");
-                try {
-                    Jws<Claims> jwt = Jwts.parserBuilder()
-                            .setSigningKey(hmacKey).build().parseClaimsJws(authToken);
-                    if (jwt.getBody().get("email") != null) {
-                        Admin admin = this.adminService.getAdminByEmail((String) jwt.getBody().get("email"));
-                        if (admin != null) {
-                            LOGGER.info("Admin Found");
-                            boolean sameSessionId = admin.getSessionId().equals(authToken);
-                            if (!sameSessionId) {
-                                throw new AuthenticationException("No admin found for this token, please login again");
-                            }
-                            return true;
-                        }
-                        return false;
-                    }
-                } catch (Exception exception) {
-                    LOGGER.info("Error While Extracting Admin Data");
-                    throw new AuthenticationException("No admin found for this token, please login again");
-                }
-            } else {
-                LOGGER.info("Token Not Found");
-                throw new AuthenticationException("No access token found in the request");
-            }
-        } else {
-            LOGGER.info("Authentication or Swagger Request");
-            return true;
-        }
-        return false;
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        LOGGER.info("PreHandle Interceptor");
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     @Override
@@ -97,14 +28,5 @@ public class RestInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
-    }
-
-    private boolean requestUrlNotContain(HttpServletRequest request, List<String> urlSectors) {
-        for (String sector : urlSectors) {
-            if (request.getServletPath().contains(sector)) {
-                return false;
-            }
-        }
-        return true;
     }
 }

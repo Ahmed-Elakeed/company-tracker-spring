@@ -16,27 +16,27 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public ResponseEntity<GenericRestResponse<?>> fetchAllTasks() {
+    public ResponseEntity<GenericRestResponse<?>> fetchAllTasks(@RequestHeader(value = "authToken") String authToken) {
         return ResponseEntity.ok(this.taskService.getAllTasks());
     }
 
     @PostMapping
-    public ResponseEntity<GenericRestResponse<?>> addTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<GenericRestResponse<?>> addTask(@RequestBody TaskDTO taskDTO,@RequestHeader(value = "authToken") String authToken) {
         return ResponseEntity.ok(this.taskService.addTask(taskDTO));
     }
 
     @PutMapping
-    public ResponseEntity<GenericRestResponse<?>> updateTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<GenericRestResponse<?>> updateTask(@RequestBody TaskDTO taskDTO,@RequestHeader(value = "authToken") String authToken) {
         return ResponseEntity.ok(this.taskService.addTask(taskDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<GenericRestResponse<?>> deleteTaskById(@PathVariable Long id) {
+    public ResponseEntity<GenericRestResponse<?>> deleteTaskById(@PathVariable Long id,@RequestHeader(value = "authToken") String authToken) {
         return ResponseEntity.ok(this.taskService.deleteTaskById(id));
     }
 
     @GetMapping(path = "/report")
-    public ResponseEntity<GenericRestResponse<?>> sendTasksReportMail(@RequestParam(value = "taskStatus", required = false) TaskStatus taskStatus) {
+    public ResponseEntity<GenericRestResponse<?>> sendTasksReportMail(@RequestParam(value = "taskStatus", required = false) TaskStatus taskStatus,@RequestHeader(value = "authToken") String authToken) {
         return ResponseEntity.ok(this.taskService.sendTasksReportMail(taskStatus));
     }
 }

@@ -11,7 +11,7 @@ import javax.security.sasl.AuthenticationException;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(value = {Exception.class, RuntimeException.class})
+    @ExceptionHandler(value = {Exception.class, RuntimeException.class,NotFoundException.class})
     public GenericRestResponse<?> allExceptionHandler(Exception exception) {
         return GenericRestResponse.builder()
                 .responseMessage(ResponseMessage.FAIL)
@@ -21,7 +21,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(value = {AuthenticationException.class})
-    public GenericRestResponse<?> allExceptionHandler(AuthenticationException exception) {
+    public GenericRestResponse<?> authenticationExceptionHandler(AuthenticationException exception) {
         return GenericRestResponse.builder()
                 .responseMessage(ResponseMessage.AUTHENTICATION_FAILURE)
                 .responseCode(ResponseMessage.AUTHENTICATION_FAILURE.getCode())
