@@ -2,8 +2,8 @@ package com.study.companytracker.rest;
 
 import com.study.companytracker.dto.DepartmentDTO;
 import com.study.companytracker.dto.GenericRestResponse;
-import com.study.companytracker.exception.NotFoundException;
 import com.study.companytracker.service.DepartmentService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +16,7 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @GetMapping
+    @RateLimiter(name = "default")
     public ResponseEntity<GenericRestResponse<?>> fetchAllDepartments(@RequestHeader(value = "authToken") String authToken) {
         return ResponseEntity.ok(this.departmentService.getAllDepartment());
     }
