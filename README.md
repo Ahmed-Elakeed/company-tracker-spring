@@ -29,5 +29,5 @@
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/Ahmed-Elakeed/company-tracker.git
-   cd company-tracker
+   git clone https://github.com/Ahmed-Elakeed/company-tracker-spring.git
+   cd company-tracker-spring
